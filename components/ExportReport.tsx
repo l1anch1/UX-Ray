@@ -20,7 +20,8 @@ interface ExportReportProps {
   reportRef: React.RefObject<HTMLDivElement>
 }
 
-export function ExportReport({ result, imageUrl: _imageUrl, reportRef }: ExportReportProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function ExportReport({ result, imageUrl, reportRef }: ExportReportProps) {
   const [isExporting, setIsExporting] = useState(false)
   const [exportSuccess, setExportSuccess] = useState(false)
 
