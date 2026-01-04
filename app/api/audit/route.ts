@@ -1,9 +1,12 @@
 import { GoogleGenAI } from "@google/genai"
 import { NextRequest, NextResponse } from "next/server"
 
-const SYSTEM_PROMPT = `You are a Senior Product Designer and HCI Researcher. Analyze the uploaded UI screenshot for a Hackathon project. Critique it ruthlessly but constructively.
+const SYSTEM_PROMPT = `You are a Senior Product Designer and HCI Researcher. 
+Analyze the uploaded UI screenshot for a Hackathon project. 
+Critique it ruthlessly but constructively.
 
-IMPORTANT: You MUST identify specific problem areas in the image and provide their coordinates as percentages (0-100) of the image dimensions.
+IMPORTANT: You MUST identify specific problem areas in the image 
+and provide their coordinates as percentages (0-100) of the image dimensions.
 
 Return ONLY valid JSON with this structure:
 {
@@ -32,8 +35,10 @@ Return ONLY valid JSON with this structure:
 
 For annotations:
 - Identify 3-6 specific problem areas in the UI
-- Use "critical" for severe issues (accessibility, contrast), "warning" for moderate issues, "info" for suggestions
-- Coordinates are percentages: x=0 is left edge, y=0 is top edge, x=100 is right edge, y=100 is bottom edge
+- Use "critical" for severe issues (accessibility, contrast), "warning" for moderate issues, 
+"info" for suggestions
+- Coordinates are percentages: x=0 is left edge, y=0 is top edge, 
+x=100 is right edge, y=100 is bottom edge
 - Be precise with the bounding box to highlight the exact problem area`
 
 export async function POST(request: NextRequest) {
@@ -64,7 +69,7 @@ export async function POST(request: NextRequest) {
 
     // Generate content using the new SDK
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-lite",
+      model: "gemini-3.0-flash",
       contents: [
         {
           role: "user",

@@ -1,14 +1,24 @@
 "use client"
 
 import { useState, useCallback, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { 
   Upload, 
   X, 
   ImageIcon,
   Scan,
   Sparkles,
-  Skull
+  Skull,
+  Zap,
+  Eye,
+  Shield,
+  Palette,
+  ArrowRight,
+  Check,
+  MousePointer2,
+  Layers,
+  Target,
+  ChevronDown
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -185,7 +195,409 @@ async function compressImage(file: File, maxSizeKB: number = 500): Promise<strin
   })
 }
 
-export default function Home() {
+// Landing Page Component
+function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
+  const { scrollYProgress } = useScroll()
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
+
+  const features = [
+    {
+      icon: Eye,
+      title: "Visual Hierarchy Analysis",
+      description: "Identify layout issues, flow problems, and visual weight imbalances that confuse users.",
+      gradient: "from-emerald-500 to-cyan-500"
+    },
+    {
+      icon: Shield,
+      title: "Accessibility Audit",
+      description: "WCAG compliance checks including contrast ratios, touch targets, and screen reader compatibility.",
+      gradient: "from-cyan-500 to-blue-500"
+    },
+    {
+      icon: Palette,
+      title: "Design Consistency",
+      description: "Spot inconsistent spacing, typography, and color usage that breaks design systems.",
+      gradient: "from-violet-500 to-purple-500"
+    },
+    {
+      icon: Zap,
+      title: "Instant Results",
+      description: "Get comprehensive analysis in seconds powered by advanced AI vision models.",
+      gradient: "from-amber-500 to-orange-500"
+    }
+  ]
+
+  const steps = [
+    { number: "01", title: "Upload", description: "Drop your UI screenshot or design mockup" },
+    { number: "02", title: "Scan", description: "AI analyzes every pixel for UX issues" },
+    { number: "03", title: "Review", description: "Get annotated results with actionable fixes" },
+  ]
+
+  return (
+    <div className="min-h-screen bg-background overflow-hidden">
+      {/* Animated background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,255,136,0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(0,255,255,0.08),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,0,255,0.05),transparent_40%)]" />
+        <div className="absolute inset-0 grid-pattern opacity-20" />
+        
+        {/* Floating orbs */}
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
+          animate={{ 
+            x: [0, 50, 0], 
+            y: [0, 30, 0],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-3xl"
+          animate={{ 
+            x: [0, -30, 0], 
+            y: [0, -50, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      {/* Navigation */}
+      <motion.nav 
+        className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-emerald-400 flex items-center justify-center">
+              <Scan className="w-5 h-5 text-background" />
+            </div>
+            <span className="text-xl font-bold tracking-tight">UX-Ray</span>
+          </div>
+          <Button 
+            onClick={onGetStarted}
+            className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 backdrop-blur-sm"
+          >
+            Launch App
+          </Button>
+        </div>
+      </motion.nav>
+
+      {/* Hero Section */}
+      <motion.section 
+        className="relative min-h-screen flex items-center justify-center px-6 pt-20"
+        style={{ opacity, scale }}
+      >
+        <div className="max-w-5xl mx-auto text-center">
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8"
+          >
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium text-primary">Powered by Gemini AI</span>
+          </motion.div>
+
+          {/* Main headline */}
+          <motion.h1 
+            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <span className="block text-foreground">See Through</span>
+            <span className="block bg-gradient-to-r from-primary via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              Bad Design
+            </span>
+          </motion.h1>
+
+          {/* Subheadline */}
+          <motion.p 
+            className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Upload any UI screenshot and let AI reveal hidden usability flaws, 
+            accessibility issues, and design inconsistencies in seconds.
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div 
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <Button 
+              onClick={onGetStarted}
+              size="lg"
+              className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-primary to-emerald-500 hover:from-primary/90 hover:to-emerald-500/90 shadow-lg shadow-primary/25 group"
+            >
+              Start Scanning
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button 
+              variant="outline"
+              size="lg"
+              className="h-14 px-8 text-lg border-border/50 hover:bg-card/50"
+              onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Learn More
+            </Button>
+          </motion.div>
+
+          {/* Hero visual */}
+          <motion.div
+            className="relative max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <div className="relative rounded-2xl overflow-hidden border border-border/50 bg-card/30 backdrop-blur-sm p-1">
+              <div className="rounded-xl overflow-hidden bg-gradient-to-br from-card to-background">
+                {/* Mock UI preview */}
+                <div className="aspect-video relative bg-black/40 flex items-center justify-center">
+                  <div className="absolute inset-0 grid-pattern opacity-10" />
+                  
+                  {/* Animated scan line */}
+                  <motion.div
+                    className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"
+                    animate={{ top: ["0%", "100%"] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  
+                  {/* Mock annotations */}
+                  <motion.div 
+                    className="absolute top-[20%] left-[15%] w-32 h-8 border-2 border-red-500/60 rounded"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 1, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
+                  />
+                  <motion.div 
+                    className="absolute top-[45%] right-[20%] w-24 h-24 border-2 border-amber-500/60 rounded"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 1, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                  />
+                  <motion.div 
+                    className="absolute bottom-[25%] left-[30%] w-40 h-6 border-2 border-primary/60 rounded"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 1, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, delay: 1.5 }}
+                  />
+                  
+                  {/* Center content */}
+                  <div className="relative z-10 text-center p-8">
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-4 border border-primary/20">
+                      <Scan className="w-10 h-10 text-primary" />
+                    </div>
+                    <p className="text-muted-foreground font-mono text-sm">Drop your screenshot here to begin</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Glow effect */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-transparent to-accent/20 rounded-3xl blur-2xl -z-10" />
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div 
+            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <ChevronDown className="w-6 h-6 text-muted-foreground/50" />
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Features Section */}
+      <section id="features" className="relative py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6">
+              X-Ray Vision for
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"> Design</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Our AI doesn&apos;t just look at your UI — it sees through it to find problems humans miss.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="group p-8 bg-card/50 border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                    <feature.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="relative py-32 px-6 bg-gradient-to-b from-transparent via-card/30 to-transparent">
+        <div className="max-w-5xl mx-auto">
+          <motion.div 
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6">
+              Three Steps to
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"> Better UX</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              From upload to insights in under 30 seconds.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {steps.map((step, index) => (
+              <motion.div
+                key={step.number}
+                className="relative text-center"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+              >
+                {/* Connector line */}
+                {index < steps.length - 1 && (
+                  <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-px bg-gradient-to-r from-primary/50 to-transparent" />
+                )}
+                
+                <div className="relative inline-flex items-center justify-center w-24 h-24 mb-6">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-accent/20" />
+                  <span className="text-4xl font-black text-primary">{step.number}</span>
+                </div>
+                <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="relative py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            {[
+              { value: "50+", label: "UX Issues Detected" },
+              { value: "<30s", label: "Analysis Time" },
+              { value: "WCAG", label: "Compliance Checks" },
+              { value: "AI", label: "Powered Analysis" },
+            ].map((stat, index) => (
+              <motion.div 
+                key={stat.label}
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <div className="text-4xl md:text-5xl font-black bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative py-32 px-6">
+        <motion.div 
+          className="max-w-4xl mx-auto text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="relative p-12 md:p-20 rounded-3xl overflow-hidden">
+            {/* Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-card to-accent/10" />
+            <div className="absolute inset-0 border border-primary/20 rounded-3xl" />
+            
+            {/* Content */}
+            <div className="relative z-10">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6">
+                Ready to See the
+                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"> Invisible?</span>
+              </h2>
+              <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
+                Stop guessing. Start knowing. Upload your first screenshot and discover what&apos;s really wrong with your design.
+              </p>
+              <Button 
+                onClick={onGetStarted}
+                size="lg"
+                className="h-16 px-10 text-xl font-bold bg-gradient-to-r from-primary to-emerald-500 hover:from-primary/90 hover:to-emerald-500/90 shadow-xl shadow-primary/30 group"
+              >
+                <Scan className="w-6 h-6 mr-3" />
+                Start Free Analysis
+                <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative border-t border-border/30 py-12 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-emerald-400 flex items-center justify-center">
+              <Scan className="w-4 h-4 text-background" />
+            </div>
+            <span className="font-bold">UX-Ray</span>
+            <span className="text-muted-foreground/60 text-sm">• AI-Powered Design Analysis</span>
+          </div>
+          <p className="text-sm text-muted-foreground/60 font-mono">
+            Built for Hacks for Hackers • MLH 🚀
+          </p>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+// Main App Component
+function AppInterface() {
   const [image, setImage] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [isScanning, setIsScanning] = useState(false)
@@ -288,39 +700,20 @@ export default function Home() {
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Header */}
         <motion.header 
-          className="pt-12 pb-6 px-6 text-center"
+          className="pt-8 pb-6 px-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="max-w-4xl mx-auto">
-            {/* Logo */}
-            <div className="inline-flex items-center justify-center gap-3 mb-6">
-              <div className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary via-primary to-accent flex items-center justify-center shadow-lg shadow-primary/25">
-                  <Scan className="w-7 h-7 text-background" />
-                </div>
-                <motion.div 
-                  className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full shadow-lg shadow-accent/50"
-                  animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-emerald-400 flex items-center justify-center">
+                <Scan className="w-5 h-5 text-background" />
               </div>
+              <span className="text-xl font-bold tracking-tight">UX-Ray</span>
             </div>
-
-            {/* Title */}
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
-              <span className="bg-gradient-to-r from-primary via-emerald-400 to-accent bg-clip-text text-transparent">
-                UX-Ray
-              </span>
-            </h1>
-
-            {/* Tagline */}
-            <p className="text-xl md:text-2xl text-muted-foreground font-medium mb-2">
-              Reveal the invisible flaws in your UI.
-            </p>
-            <p className="text-sm text-muted-foreground/60 font-mono">
-              Powered by Gemini 3 flash • X-Ray vision for designers
+            <p className="text-sm text-muted-foreground/60 font-mono hidden sm:block">
+              AI-Powered Design X-Ray
             </p>
           </div>
         </motion.header>
@@ -339,6 +732,18 @@ export default function Home() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
+                  {/* Title */}
+                  <div className="text-center mb-8">
+                    <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-3">
+                      <span className="bg-gradient-to-r from-primary via-emerald-400 to-accent bg-clip-text text-transparent">
+                        Scan Your UI
+                      </span>
+                    </h1>
+                    <p className="text-muted-foreground">
+                      Upload a screenshot to reveal hidden design flaws
+                    </p>
+                  </div>
+
                   {/* Drop Zone */}
                   <Card 
                     className={`relative overflow-hidden transition-all duration-300 ${
@@ -595,8 +1000,36 @@ export default function Home() {
             <p className="font-mono">Built for Hacks for Hackers • MLH 🚀</p>
             <p>UX-Ray • AI-Powered Design X-Ray</p>
           </div>
-      </footer>
+        </footer>
       </div>
     </div>
+  )
+}
+
+export default function Home() {
+  const [showApp, setShowApp] = useState(false)
+
+  return (
+    <AnimatePresence mode="wait">
+      {!showApp ? (
+        <motion.div
+          key="landing"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
+        >
+          <LandingPage onGetStarted={() => setShowApp(true)} />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="app"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <AppInterface />
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
