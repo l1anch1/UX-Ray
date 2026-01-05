@@ -41,6 +41,31 @@ For annotations:
 x=100 is right edge, y=100 is bottom edge
 - Be precise with the bounding box to highlight the exact problem area`
 
+// Helper function to create GoogleGenAI client with optional proxy support
+function createGeminiClient(apiKey: string) {
+  const useProxy = process.env.USE_PROXY === "true"
+  const proxyBaseUrl = process.env.PROXY_BASE_URL
+  const useVertexAI = process.env.USE_VERTEXAI === "true"
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const config: any = { apiKey }
+
+  if (useProxy && proxyBaseUrl) {
+    console.log(`[Gemini] Using proxy: ${proxyBaseUrl}`)
+    config.httpOptions = {
+      baseUrl: proxyBaseUrl,
+    }
+    // VertexAI protocol is more stable with proxy
+    if (useVertexAI) {
+      config.vertexai = true
+    }
+  } else {
+    console.log("[Gemini] Using official API endpoint")
+  }
+
+  return new GoogleGenAI(config)
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Check API key
@@ -52,7 +77,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const ai = new GoogleGenAI({ apiKey })
+    const ai = createGeminiClient(apiKey)
 
     const body = await request.json()
     const { image, mimeType } = body as { image: string; mimeType: string }
